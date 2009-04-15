@@ -1,0 +1,40 @@
+/*
+	Adapted from Apple sample code "AudioRecorder". Not an AudioRecorder anymore.
+
+*/
+
+
+#import <UIKit/UIKit.h>
+#import	"AudioQueueObject.h"
+#include <complex.h>
+#include "fftw3.h"
+
+@class AudioRecorder;
+@protocol AudioRecorderDelegate
+-(void)recorder:(AudioRecorder*)recorder updatedFrequencies:(complex *)ffts;
+
+@end
+
+
+@interface AudioRecorder : AudioQueueObject {
+@public
+	fftw_plan plan;
+	double *fft_in;
+	complex *fft_out;
+@protected
+	BOOL	stopping;
+	int bufferByteSize;
+	id<AudioRecorderDelegate> delegate;
+}
+@property int bufferSampleCount;
+@property (readwrite) BOOL	stopping;
+@property (assign, nonatomic) id<AudioRecorderDelegate> delegate;
+
+- (void) copyEncoderMagicCookieToFile: (AudioFileID) file fromQueue: (AudioQueueRef) queue;
+- (void) setupAudioFormat: (UInt32) formatID;
+- (void) setupRecording;
+
+- (void) record;
+- (void) stop;
+
+@end
