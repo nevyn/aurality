@@ -11,8 +11,9 @@
 
 @class AudioRecorder;
 @protocol AudioRecorderDelegate
--(void)recorder:(AudioRecorder*)recorder updatedFrequencies:(complex *)ffts;
-
+@optional
+//-(void)recorder:(AudioRecorder*)recorder updatedFrequencies:(complex *)ffts;
+-(void)recorder:(AudioRecorder*)recorder updatedHighFrequency:(double)frequence amplitude:(double)amp;
 @end
 
 
@@ -21,6 +22,7 @@
 	fftw_plan plan;
 	double *fft_in;
 	complex *fft_out;
+	double frequencyRangeCoveredByOneBuffer;
 @protected
 	BOOL	stopping;
 	int bufferByteSize;

@@ -13,6 +13,8 @@
 @interface AuralityGameController : UIViewController <AudioRecorderDelegate> {
 	AudioRecorder *recorder;
 	IBOutlet FrequencyView *freq;
+	IBOutlet UISlider *slider;
+	IBOutlet UILabel *label;
 }
 
 @end

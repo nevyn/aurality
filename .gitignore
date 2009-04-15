@@ -1,0 +1,4 @@
+.DS_Store
+Aurality.xcodeproj/*.mode2v3
+Aurality.xcodeproj/*.pbxuser
+build

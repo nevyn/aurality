@@ -117,7 +117,6 @@ static void propertyListenerCallback (
 		// If the user tapped Stop, update the UI now. After the AudioPlayer object
 		//	and the underlying audio queue object have competely stopped, the 
 		//	AudioViewController will release them.
-		[player.notificationDelegate updateUserInterfaceOnAudioQueueStateChange: player];
 	} else {
 		// if the file reached the end, update the UI after the run loop has finished. 
 		//	This delay is required to ensure that the AudioPlayer class, and the  

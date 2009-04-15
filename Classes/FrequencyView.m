@@ -63,7 +63,7 @@
 -(void)newData:(complex*)fft_ count:(int)count_;
 {
 	fft = fft_;
-	numCount = count_/5;
+	numCount = count_;
 	[self setNeedsDisplay];
 }
 

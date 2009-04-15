@@ -57,9 +57,17 @@
 
 #pragma mark 
 #pragma mark AudioRecorder delegates
--(void)recorder:(AudioRecorder*)recorder_ updatedFrequencies:(complex *)ffts;
+/*-(void)recorder:(AudioRecorder*)recorder_ updatedFrequencies:(complex *)ffts;
 {
 	[freq newData:ffts count:recorder_.bufferSampleCount/2];
+}*/
+-(void)recorder:(AudioRecorder*)recorder updatedHighFrequency:(double)frequence amplitude:(double)amp;
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	slider.value = amp;
+	label.text = [NSString stringWithFormat:@"%f", frequence];
+	NSLog(@"Freq: %f Amp: %f", frequence, amp);
+	[pool drain];
 }
 
 @end

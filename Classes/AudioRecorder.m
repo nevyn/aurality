@@ -16,7 +16,6 @@ static void recordingCallback (
 	AudioRecorder *rec = (AudioRecorder *) inUserData;
 	signed short *samples = inBuffer->mAudioData;
 	
-	NSLog(@"Got data %d packets", inNumPackets);
 		
 	// if there is audio data, write it to the file
 	if (inNumPackets > 0) {
@@ -26,7 +25,20 @@ static void recordingCallback (
 		}
 		
 		fftw_execute(rec->plan); /* repeat as needed */
-		[rec.delegate recorder:rec updatedFrequencies:rec->fft_out];
+		
+		int maxIdx = 0;
+		double maxVal = -1;
+		for(int i = 0; i < inNumPackets/2; i++) {
+			double mag = sqrt(creal(rec->fft_out[i])*creal(rec->fft_out[i]) + cimag(rec->fft_out[i])*cimag(rec->fft_out[i]));
+			if(mag > maxVal) {
+				maxVal = mag;
+				maxIdx = i;
+			}
+		}
+		double freq = (rec->frequencyRangeCoveredByOneBuffer/(inNumPackets/2))*maxIdx;
+		
+		[rec.delegate recorder:rec updatedHighFrequency:freq amplitude:maxVal];
+		//[rec.delegate recorder:rec updatedFrequencies:rec->fft_out];
 	}
 
 	// if not stopping, re-enqueue the buffer so that it can be filled again
@@ -143,6 +155,7 @@ static void audioQueuePropertyListenerCallback (
 -(void)setBufferSampleCount:(int)newCount;
 {
 	bufferByteSize = newCount*2;
+	frequencyRangeCoveredByOneBuffer = 22050.0; //(audioFormat.mSampleRate)/(newCount);
 }
 
 
