@@ -7,6 +7,9 @@
 //
 
 #import "AuralityGameController.h"
+@interface AuralityGameController ()
+@property (nonatomic, retain) AuralityGameView *gameView;
+@end
 
 
 @implementation AuralityGameController
@@ -23,27 +26,20 @@
     return self;
 }
 
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
+- (void)dealloc {
+    [super dealloc];
 }
-*/
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+	CGRect r = self.view.frame; r.origin = CGPointMake(0, 0);
+	self.gameView = [[[AuralityGameView alloc] initWithFrame:r] autorelease];
+	[self.view addSubview:self.gameView];
+	// TODO: didReceiveMemoryWarning will probably make all this crash
 }
-*/
 
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
@@ -51,23 +47,31 @@
 }
 
 
-- (void)dealloc {
-    [super dealloc];
+@synthesize gameView;
+
+// In degrees
+-(double)angleFromFrequency:(double)freq_;
+{
+	double frac = (freq_-kAuralityLowCutoffHz)/(kAuralityMaxAngleFreq-kAuralityLowCutoffHz);
+	return frac*360.;
 }
+
 
 #pragma mark 
 #pragma mark AudioRecorder delegates
-/*-(void)recorder:(AudioRecorder*)recorder_ updatedFrequencies:(complex *)ffts;
-{
-	[freq newData:ffts count:recorder_.bufferSampleCount/2];
-}*/
+
 -(void)recorder:(AudioRecorder*)recorder updatedHighFrequency:(double)frequence amplitude:(double)amp;
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	slider.value = amp;
-	label.text = [NSString stringWithFormat:@"%f", frequence];
-	NSLog(@"Freq: %f Amp: %f", frequence, amp);
-	[pool drain];
+	BOOL isInRange = frequence > kAuralityLowCutoffHz && frequence < kAuralityHighCutoffHz;
+	
+	if(amp > kAuralityFiringAmplitude && isInRange)
+		self.gameView.firing = YES;
+	else {
+		self.gameView.firing = NO;
+		return;
+	}
+	
+	self.gameView.angle = [self angleFromFrequency:frequence];
 }
 
 @end

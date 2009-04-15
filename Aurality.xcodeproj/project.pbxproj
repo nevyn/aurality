@@ -13,10 +13,14 @@
 		05C3FC9E0F961D4900807D7C /* AuralityGameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C3FC9D0F961D4900807D7C /* AuralityGameController.m */; };
 		05C3FCC10F9620B700807D7C /* AuralityGame.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05C3FCC00F9620B700807D7C /* AuralityGame.xib */; };
 		05C3FCD20F96216900807D7C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C3FCCF0F96216900807D7C /* AudioToolbox.framework */; };
-		05C3FCD40F96216900807D7C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C3FCD10F96216900807D7C /* AVFoundation.framework */; };
 		05C3FD730F96459F00807D7C /* libfftw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05C3FD720F96459F00807D7C /* libfftw3.a */; };
 		05C3FD820F96464500807D7C /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05C3FD810F96464500807D7C /* notes.txt */; };
 		05C3FDCB0F964C2F00807D7C /* FrequencyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C3FDCA0F964C2F00807D7C /* FrequencyView.m */; };
+		05D6201E0F967590005ED13D /* CInvocationGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6201C0F967590005ED13D /* CInvocationGrabber.m */; };
+		05D6206E0F967A52005ED13D /* AuralityGameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6206D0F967A52005ED13D /* AuralityGameView.m */; };
+		05D620910F967E4A005ED13D /* player.png in Resources */ = {isa = PBXBuildFile; fileRef = 05D620900F967E4A005ED13D /* player.png */; };
+		05D621040F96814C005ED13D /* cannon.png in Resources */ = {isa = PBXBuildFile; fileRef = 05D621030F96814C005ED13D /* cannon.png */; };
+		05D6212E0F968543005ED13D /* cannon-firing.png in Resources */ = {isa = PBXBuildFile; fileRef = 05D6212D0F968543005ED13D /* cannon-firing.png */; };
 		1D3623260D0F684500981E51 /* AuralityAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AuralityAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -36,12 +40,18 @@
 		05C3FC9D0F961D4900807D7C /* AuralityGameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuralityGameController.m; sourceTree = "<group>"; };
 		05C3FCC00F9620B700807D7C /* AuralityGame.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuralityGame.xib; sourceTree = "<group>"; };
 		05C3FCCF0F96216900807D7C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		05C3FCD10F96216900807D7C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		05C3FD720F96459F00807D7C /* libfftw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfftw3.a; path = Vendor/libfftw3.a; sourceTree = "<group>"; };
 		05C3FD760F9645F000807D7C /* fftw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftw3.h; path = "Vendor/fftw-3.2.1/api/fftw3.h"; sourceTree = "<group>"; };
 		05C3FD810F96464500807D7C /* notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes.txt; sourceTree = "<group>"; };
 		05C3FDC90F964C2F00807D7C /* FrequencyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrequencyView.h; sourceTree = "<group>"; };
 		05C3FDCA0F964C2F00807D7C /* FrequencyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FrequencyView.m; sourceTree = "<group>"; };
+		05D6201C0F967590005ED13D /* CInvocationGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CInvocationGrabber.m; sourceTree = "<group>"; };
+		05D6201D0F967590005ED13D /* CInvocationGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CInvocationGrabber.h; sourceTree = "<group>"; };
+		05D6206C0F967A52005ED13D /* AuralityGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuralityGameView.h; sourceTree = "<group>"; };
+		05D6206D0F967A52005ED13D /* AuralityGameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuralityGameView.m; sourceTree = "<group>"; };
+		05D620900F967E4A005ED13D /* player.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = player.png; path = resources/player.png; sourceTree = "<group>"; };
+		05D621030F96814C005ED13D /* cannon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cannon.png; path = resources/cannon.png; sourceTree = "<group>"; };
+		05D6212D0F968543005ED13D /* cannon-firing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cannon-firing.png"; path = "resources/cannon-firing.png"; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* AuralityAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuralityAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* AuralityAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AuralityAppDelegate.m; sourceTree = "<group>"; };
@@ -63,7 +73,6 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				05C3FCD20F96216900807D7C /* AudioToolbox.framework in Frameworks */,
-				05C3FCD40F96216900807D7C /* AVFoundation.framework in Frameworks */,
 				05C3FD730F96459F00807D7C /* libfftw3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,7 +94,11 @@
 				05C3FC9C0F961D4900807D7C /* AuralityGameController.h */,
 				05C3FC9D0F961D4900807D7C /* AuralityGameController.m */,
 				05C3FDC90F964C2F00807D7C /* FrequencyView.h */,
+				05D6201C0F967590005ED13D /* CInvocationGrabber.m */,
+				05D6201D0F967590005ED13D /* CInvocationGrabber.h */,
 				05C3FDCA0F964C2F00807D7C /* FrequencyView.m */,
+				05D6206C0F967A52005ED13D /* AuralityGameView.h */,
+				05D6206D0F967A52005ED13D /* AuralityGameView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -123,6 +136,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				05D620900F967E4A005ED13D /* player.png */,
+				05D6212D0F968543005ED13D /* cannon-firing.png */,
+				05D621030F96814C005ED13D /* cannon.png */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				05C3FCC00F9620B700807D7C /* AuralityGame.xib */,
@@ -136,7 +152,6 @@
 				05C3FD760F9645F000807D7C /* fftw3.h */,
 				05C3FD720F96459F00807D7C /* libfftw3.a */,
 				05C3FCCF0F96216900807D7C /* AudioToolbox.framework */,
-				05C3FCD10F96216900807D7C /* AVFoundation.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
@@ -189,6 +204,9 @@
 				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
 				05C3FCC10F9620B700807D7C /* AuralityGame.xib in Resources */,
 				05C3FD820F96464500807D7C /* notes.txt in Resources */,
+				05D620910F967E4A005ED13D /* player.png in Resources */,
+				05D621040F96814C005ED13D /* cannon.png in Resources */,
+				05D6212E0F968543005ED13D /* cannon-firing.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +224,8 @@
 				05C3FC9A0F961BE900807D7C /* AudioPlayer.m in Sources */,
 				05C3FC9E0F961D4900807D7C /* AuralityGameController.m in Sources */,
 				05C3FDCB0F964C2F00807D7C /* FrequencyView.m in Sources */,
+				05D6201E0F967590005ED13D /* CInvocationGrabber.m in Sources */,
+				05D6206E0F967A52005ED13D /* AuralityGameView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

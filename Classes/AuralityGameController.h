@@ -9,12 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "AudioRecorder.h"
 #import "FrequencyView.h"
+#import "AuralityGameView.h"
+
+#define kAuralityFiringAmplitude 200000
+#define kAuralityHighCutoffHz 2500
+#define kAuralityMaxAngleFreq 1300
+#define kAuralityLowCutoffHz 800
 
 @interface AuralityGameController : UIViewController <AudioRecorderDelegate> {
 	AudioRecorder *recorder;
-	IBOutlet FrequencyView *freq;
 	IBOutlet UISlider *slider;
 	IBOutlet UILabel *label;
+	AuralityGameView *gameView;
+	
 }
-
 @end

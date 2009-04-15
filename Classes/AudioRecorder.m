@@ -1,6 +1,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "AudioQueueObject.h"
 #import "AudioRecorder.h"
+#import "CInvocationGrabber.h"
 
 // Audio queue recording callback, which performs recording using Audio File Services.
 static void recordingCallback (
@@ -11,6 +12,7 @@ static void recordingCallback (
 	UInt32								inNumPackets,
 	const AudioStreamPacketDescription	*inPacketDesc
 ) {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	// This callback, being outside the implementation block, needs a reference to the 
 	//	AudioRecorder object -- which it gets via the inUserData parameter.
 	AudioRecorder *rec = (AudioRecorder *) inUserData;
@@ -37,7 +39,7 @@ static void recordingCallback (
 		}
 		double freq = (rec->frequencyRangeCoveredByOneBuffer/(inNumPackets/2))*maxIdx;
 		
-		[rec.delegate recorder:rec updatedHighFrequency:freq amplitude:maxVal];
+		[rec recorder:rec updatedHighFrequency:freq amplitude:maxVal];
 		//[rec.delegate recorder:rec updatedFrequencies:rec->fft_out];
 	}
 
@@ -51,6 +53,8 @@ static void recordingCallback (
 			NULL
 		);
 	}
+	
+	[pool drain];
 }
 
 // Audio queue poperty callback function, called when an audio queue property changes. The  
@@ -86,7 +90,6 @@ static void audioQueuePropertyListenerCallback (
 }
 
 - (id) initWithURL: fileURL {
-	NSLog (@"initializing a recorder object.");
 	if( ! [super init] ) return nil;
 
 
@@ -101,8 +104,6 @@ static void audioQueuePropertyListenerCallback (
 							0,						// flags
 							&queueObject
 						);
-
-	NSLog (@"Attempted to create new recording audio queue object. Result: %f", result);
 
 	// get the recording format back from the audio queue's audio converter --
 	//	the file may require a more specific stream description than was 
@@ -204,8 +205,6 @@ static void audioQueuePropertyListenerCallback (
 		audioFormat.mSampleRate = self.hardwareSampleRate;
 #endif
 
-	NSLog (@"Hardware sample rate = %f", self.audioFormat.mSampleRate);
-
 	audioFormat.mFormatID			= formatID;
 	audioFormat.mChannelsPerFrame	= 1;
 	
@@ -246,7 +245,17 @@ static void audioQueuePropertyListenerCallback (
 }
 
 
-
-
+#pragma mark 
+#pragma mark Delegation
 @synthesize delegate;
+-(void)recorder:(AudioRecorder*)recorder updatedHighFrequency:(double)frequence amplitude:(double)amp;
+{
+	if(!delegate) return;
+	
+	CInvocationGrabber *grab = [CInvocationGrabber invocationGrabber];
+	[grab setTarget:delegate];
+	[(id)grab recorder:self updatedHighFrequency:frequence amplitude:amp];
+	
+	[[grab invocation] performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
+}
 @end

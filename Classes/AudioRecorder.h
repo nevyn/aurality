@@ -17,7 +17,7 @@
 @end
 
 
-@interface AudioRecorder : AudioQueueObject {
+@interface AudioRecorder : AudioQueueObject <AudioRecorderDelegate> {
 @public
 	fftw_plan plan;
 	double *fft_in;
