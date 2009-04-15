@@ -23,16 +23,31 @@
 	AuCannon *cannon;
 }
 -(id)init;
-@property (readonly) AuCannon *cannon;
+@property (retain) AuCannon *cannon;
 @end
 
 
-@interface AuralityGameView : UIView {
+@interface AuLevel : UIView
+{
+	
+}
+-(id)init;
+@end
+
+
+
+@interface AuralityGameView : UIScrollView {
 	BOOL firing;
 	double angle;
+	AuLevel *level;
 	AuPlayer *player;
+	CGPoint movementVector;
+	
+	NSTimer *updateTimer;
+	NSTimeInterval lastUpdate;
 }
 @property (nonatomic) double angle;
 @property (nonatomic) BOOL firing;
+@property (nonatomic) CGPoint movementVector;
 
 @end

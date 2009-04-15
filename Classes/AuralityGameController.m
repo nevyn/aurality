@@ -11,6 +11,8 @@
 @property (nonatomic, retain) AuralityGameView *gameView;
 @end
 
+#define kAccelerometerFrequency     40
+
 
 @implementation AuralityGameController
 
@@ -22,6 +24,10 @@
 	recorder = [[AudioRecorder alloc] init];
 	recorder.delegate = self;
 	[recorder record];
+	
+	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / kAccelerometerFrequency)];
+    [[UIAccelerometer sharedAccelerometer] setDelegate:self];
+
 	
     return self;
 }
@@ -74,4 +80,12 @@
 	self.gameView.angle = [self angleFromFrequency:frequence];
 }
 
+#pragma mark Gyro delegates
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acc
+{
+	CGPoint newP = CGPointMake(acc.x, -(acc.y+0.6));
+	newP.x *= 400.;
+	newP.y *= 600.;
+	self.gameView.movementVector = newP;
+}
 @end

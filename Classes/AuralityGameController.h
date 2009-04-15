@@ -16,7 +16,7 @@
 #define kAuralityMaxAngleFreq 1300
 #define kAuralityLowCutoffHz 800
 
-@interface AuralityGameController : UIViewController <AudioRecorderDelegate> {
+@interface AuralityGameController : UIViewController <AudioRecorderDelegate, UIAccelerometerDelegate> {
 	AudioRecorder *recorder;
 	IBOutlet UISlider *slider;
 	IBOutlet UILabel *label;

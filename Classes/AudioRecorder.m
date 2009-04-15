@@ -95,7 +95,7 @@ static void audioQueuePropertyListenerCallback (
 
 	[self setupAudioFormat: kAudioFormatLinearPCM];
 
-	OSStatus result =	AudioQueueNewInput (
+	AudioQueueNewInput (
 							&audioFormat,
 							recordingCallback,
 							self,					// userData
