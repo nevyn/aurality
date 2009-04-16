@@ -6,3 +6,6 @@
     #import <Foundation/Foundation.h>
     #import <UIKit/UIKit.h>
 #endif
+
+#define Deg2Rad(Deg) ((Deg * M_PI) / 180.0)
+#define Rad2Deg(Rad) ((180.0 * Rad) / M_PI)

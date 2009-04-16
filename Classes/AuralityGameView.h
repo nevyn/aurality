@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import "BNZLine.h"
 
 @interface AuCannon : UIView
 {
@@ -29,9 +30,30 @@
 
 @interface AuLevel : UIView
 {
-	
+	NSMutableArray *beams;
+	AuPlayer *player;
 }
 -(id)init;
+
+@property (retain) AuPlayer *player;
+
+@end
+
+@interface AuBeam : UIView
+{
+	CGPoint start, end;
+}
+
+-initStart:(CGPoint)start end:(CGPoint)end;
+-initWithLine:(BNZLine*)line;
+-(void)reshape;
+
+@property(assign) CGPoint start;
+@property(assign) CGPoint end;
+-(BNZLine*)line;
+
+
+
 @end
 
 
@@ -40,7 +62,6 @@
 	BOOL firing;
 	double angle;
 	AuLevel *level;
-	AuPlayer *player;
 	CGPoint movementVector;
 	
 	NSTimer *updateTimer;

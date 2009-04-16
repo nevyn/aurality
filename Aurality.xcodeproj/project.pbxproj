@@ -17,6 +17,8 @@
 		05C3FD820F96464500807D7C /* notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 05C3FD810F96464500807D7C /* notes.txt */; };
 		05C3FDCB0F964C2F00807D7C /* FrequencyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05C3FDCA0F964C2F00807D7C /* FrequencyView.m */; };
 		05CCEC370F9690CF004313C5 /* level1.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEC360F9690CF004313C5 /* level1.png */; };
+		05CCECC70F969F4F004313C5 /* BNZVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CCECC40F969F4F004313C5 /* BNZVector.m */; };
+		05CCECC80F969F4F004313C5 /* BNZLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CCECC60F969F4F004313C5 /* BNZLine.m */; };
 		05D6201E0F967590005ED13D /* CInvocationGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6201C0F967590005ED13D /* CInvocationGrabber.m */; };
 		05D6206E0F967A52005ED13D /* AuralityGameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6206D0F967A52005ED13D /* AuralityGameView.m */; };
 		05D620910F967E4A005ED13D /* player.png in Resources */ = {isa = PBXBuildFile; fileRef = 05D620900F967E4A005ED13D /* player.png */; };
@@ -47,6 +49,10 @@
 		05C3FDC90F964C2F00807D7C /* FrequencyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrequencyView.h; sourceTree = "<group>"; };
 		05C3FDCA0F964C2F00807D7C /* FrequencyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FrequencyView.m; sourceTree = "<group>"; };
 		05CCEC360F9690CF004313C5 /* level1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = level1.png; path = resources/level1.png; sourceTree = "<group>"; };
+		05CCECC30F969F4F004313C5 /* BNZVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNZVector.h; sourceTree = "<group>"; };
+		05CCECC40F969F4F004313C5 /* BNZVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNZVector.m; sourceTree = "<group>"; };
+		05CCECC50F969F4F004313C5 /* BNZLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNZLine.h; sourceTree = "<group>"; };
+		05CCECC60F969F4F004313C5 /* BNZLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNZLine.m; sourceTree = "<group>"; };
 		05D6201C0F967590005ED13D /* CInvocationGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CInvocationGrabber.m; sourceTree = "<group>"; };
 		05D6201D0F967590005ED13D /* CInvocationGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CInvocationGrabber.h; sourceTree = "<group>"; };
 		05D6206C0F967A52005ED13D /* AuralityGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuralityGameView.h; sourceTree = "<group>"; };
@@ -101,6 +107,10 @@
 				05C3FDCA0F964C2F00807D7C /* FrequencyView.m */,
 				05D6206C0F967A52005ED13D /* AuralityGameView.h */,
 				05D6206D0F967A52005ED13D /* AuralityGameView.m */,
+				05CCECC30F969F4F004313C5 /* BNZVector.h */,
+				05CCECC40F969F4F004313C5 /* BNZVector.m */,
+				05CCECC50F969F4F004313C5 /* BNZLine.h */,
+				05CCECC60F969F4F004313C5 /* BNZLine.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -230,6 +240,8 @@
 				05C3FDCB0F964C2F00807D7C /* FrequencyView.m in Sources */,
 				05D6201E0F967590005ED13D /* CInvocationGrabber.m in Sources */,
 				05D6206E0F967A52005ED13D /* AuralityGameView.m in Sources */,
+				05CCECC70F969F4F004313C5 /* BNZVector.m in Sources */,
+				05CCECC80F969F4F004313C5 /* BNZLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

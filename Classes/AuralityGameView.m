@@ -8,8 +8,6 @@
 
 #import "AuralityGameView.h"
 
-#define Deg2Rad(Deg) ((Deg * M_PI) / 180.0)
-#define Rad2Deg(Rad) ((180.0 * Rad) / M_PI)
 
 
 @implementation AuCannon
@@ -32,10 +30,15 @@
 {
 	if(fire == firing) return;
 	firing = fire;
+	
+	//AuLevel *level = (id)(self.superview.superview); // self<player<level
+	
 	if(firing) {
 		self.layer.contents = (id)[UIImage imageNamed:@"cannon-firing.png"].CGImage;
+		//[level createBeamFrom:self];
 	} else {
 		self.layer.contents = (id)[UIImage imageNamed:@"cannon.png"].CGImage;
+		//[level removeBeamFrom:self];
 	}
 }
 @end
@@ -67,6 +70,10 @@
 @end
 
 
+
+
+
+
 @implementation AuLevel
 
 -(id)init;
@@ -75,13 +82,123 @@
 	
 	self.layer.contents = (id)[UIImage imageNamed:@"level1.png"].CGImage;
 	
+	beams = [[NSMutableArray alloc] init];
+	
+	player = [[AuPlayer alloc] init];
+	[self addSubview:player];
+	player.layer.position = CGPointMake(128, 128);
 	
 	return self;
 }
+-(void)dealloc;
+{
+	[player release];
+	[beams release];
+	[super dealloc];
+}
 
+@synthesize player;
+
+
+-(void)updateBeams;
+{
+	for (AuBeam *beam in [[beams copy] autorelease]) {
+		[beam removeFromSuperview];
+		[beams removeObject:beam];
+	}
+	
+	if( ! player.cannon.firing ) return;
+	
+	BNZVector *dir = VecXY(0, -1);
+	[dir rotateByDegrees:player.cannon.angle];
+	
+	BNZVector *pl = VecCG(player.layer.position);
+	
+	BNZVector *start = [pl sumWithVector:[dir vectorScaledBy:32]];
+	
+	BNZVector *end = [start sumWithVector:[dir vectorScaledBy:300]];
+	
+	AuBeam *beam = [[AuBeam alloc] initStart:start.asCGPoint end:end.asCGPoint];
+	
+	[beams addObject:beam];
+	[self addSubview:beam];
+	[beam release];
+	
+}
 
 @end
 
+
+static double beamWidth = 5;
+
+@implementation AuBeam
+-initStart:(CGPoint)start_ end:(CGPoint)end_;
+{
+    if(![super initWithFrame:CGRectZero]) return nil;
+    self.layer.anchorPoint = CGPointMake(0, 0.5);
+        
+    self.start = start_;
+    self.end = end_;
+    return self;
+}
+-initWithLine:(BNZLine*)line;
+{
+    return [self initStart:[[line start] asCGPoint] end:[[line end] asCGPoint]];
+}
+-init;
+{
+    return [self initStart:CGPointMake(0, 0) end:CGPointMake(0,0)];
+}
+
+@synthesize start;
+@synthesize end;
+-(void)setStart:(CGPoint)start_;
+{
+    start = start_;
+    end = start_;
+}
+
+-(void)setEnd:(CGPoint)end_;
+{
+    end = end_;
+    [self reshape];
+}
+-(BNZLine*)line;
+{
+    return [BNZLine lineAt:VecCG(self.start) to:VecCG(self.end)];
+}
+
+
+-(void)reshape;
+{
+    float length = self.line.vector.length;
+    
+    self.layer.affineTransform = CGAffineTransformMakeRotation(self.line.vector.angle);
+    self.frame = CGRectMake(start.x, start.y, length, beamWidth);
+    CGRect r = self.frame; r.origin.x = r.origin.y = 0; r.size.height = beamWidth;
+    self.bounds = r;
+    [self setNeedsDisplay];
+}
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+    CGContextSetFillColor(context, (CGFloat[4]){0,0,0,0});
+	UIRectFill(rect);
+	
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, .0f, beamWidth/4.);
+    CGContextAddLineToPoint(context, self.bounds.size.width, .0f);
+    
+    CGContextSetLineWidth(context, beamWidth/2.);
+    CGContextSetStrokeColor(context, (CGFloat[4]){1,0,0,1});
+    CGContextStrokePath(context);
+    
+}
+
+
+
+@end
 
 
 
@@ -100,10 +217,6 @@
 	[self addSubview:level];
 	self.contentSize = level.frame.size;
 	
-	player = [[AuPlayer alloc] init];
-	[level addSubview:player];
-	player.layer.position = CGPointMake(128, 128);
-	
 	lastUpdate = [NSDate timeIntervalSinceReferenceDate];
 	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:1./40. target:self selector:@selector(update) userInfo:nil repeats:YES];
 		
@@ -114,7 +227,6 @@
 - (void)dealloc {
 	self.updateTimer = nil;
 	[level release];
-	[player release];
     [super dealloc];
 }
 
@@ -123,26 +235,32 @@
 	NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
 	NSTimeInterval d = now - lastUpdate;
 	
-	player.layer.position = CGPointMake(player.layer.position.x + movementVector.x*d, player.layer.position.y + movementVector.y*d);
+	CGPoint newPos = CGPointMake(level.player.layer.position.x + movementVector.x*d, level.player.layer.position.y + movementVector.y*d);
 	
-	self.contentOffset = CGPointMake(player.layer.position.x-self.frame.size.width/2, player.layer.position.y-self.frame.size.height/2);
-//	[self scrollRectToVisible:CGRectMake(player.layer.position.x, player.layer.position.y, 32, 32) animated:YES];
+	BOOL isInLevel = newPos.x > 16 && newPos.y > 16 && newPos.x < level.frame.size.width-16 && newPos.y < level.frame.size.height-16;
+	
+	if(isInLevel)
+		level.player.layer.position = newPos;
+	
+	self.contentOffset = CGPointMake(level.player.layer.position.x-self.frame.size.width/2, level.player.layer.position.y-self.frame.size.height/2);
 	
 	lastUpdate = now;
+	
+	[level updateBeams];
 }
 
--(double)angle; { return player.cannon.angle; }
+-(double)angle; { return level.player.cannon.angle; }
 -(void)setAngle:(double)newAngle;
 {
-	player.cannon.angle = newAngle;
+	level.player.cannon.angle = newAngle;
 }
 -(BOOL)firing;
 {
-	return player.cannon.firing;
+	return level.player.cannon.firing;
 }
 -(void)setFiring:(BOOL)newFire;
 {
-	player.cannon.firing = newFire;
+	level.player.cannon.firing = newFire;
 }
 @synthesize movementVector;
 -(void)setMovementVector:(CGPoint)newV;
@@ -166,6 +284,27 @@
 {
 	return NO;
 }
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	UITouch *t = [[event allTouches] anyObject];
+	CGPoint p = [t locationInView:self.superview];
+	NSLog(@"%f %f", p.x, p.y);
+	if(p.y < 100)
+		self.movementVector = CGPointMake(0, -200);
+	else if(p.y > 350)
+		self.movementVector = CGPointMake(0, 200);
+	else if(p.x < 75)
+		self.movementVector = CGPointMake(-200, 0);
+	else if(p.x > 165)
+		self.movementVector = CGPointMake(200, 0);
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	self.movementVector = CGPointMake(0, 0);
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event; {}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event; {}
 
 
 @end
