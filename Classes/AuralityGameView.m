@@ -7,7 +7,7 @@
 //
 
 #import "AuralityGameView.h"
-
+#import <AudioToolbox/AudioToolbox.h>
 
 @implementation AuCannon
 -(id)init;
@@ -589,8 +589,25 @@ static double beamWidth = 5;
 -(void)clearLevel;
 {
 	if(levelNo == 0) {
+		
+		AudioSessionInitialize (NULL, NULL, NULL, NULL);
+		
+		
+		UInt32 sessionCategory = kAudioSessionCategory_LiveAudio;    // 1
+		
+		AudioSessionSetProperty (
+								 kAudioSessionCategory_PlayAndRecord,                        // 2
+								 sizeof (sessionCategory),                                   // 3
+								 &sessionCategory                                            // 4
+		);
+		UInt32 newAudioRoute = kAudioSessionOverrideAudioRoute_Speaker;
+		AudioSessionSetProperty(kAudioSessionProperty_OverrideAudioRoute, sizeof(newAudioRoute), &newAudioRoute);
+		
+		AudioSessionSetActive(YES);
+		
 		NSURL *url = [[[NSURL alloc] initFileURLWithPath:[[NSBundle mainBundle] pathForResource:@"intro voice" ofType:@"m4a"]] autorelease];
 		AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+		player.volume = 1.0;
 		NSLog(@"%@ player %@", url, player);
 		player.delegate = self;
 		[player play];
