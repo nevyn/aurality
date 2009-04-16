@@ -610,7 +610,7 @@ static double beamWidth = 5;
 		player.volume = 1.0;
 
 		player.delegate = self;
-		//[player play];
+		[player play];
 	}
 	NSString *levelName = [NSString stringWithFormat:@"level%d", ++levelNo];
 	if([[NSBundle mainBundle] pathForResource:levelName ofType:@"plist"]) {
