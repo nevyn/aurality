@@ -93,9 +93,9 @@
 {
 	BNZLine *a = Line4f(rect.origin.x, rect.origin.y, rect.origin.x+rect.size.width, rect.origin.y),
 			*b = Line4f(rect.origin.x + rect.size.width, rect.origin.y, rect.origin.x+rect.size.width, rect.origin.y+rect.size.height),
-			*c = Line4f(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height, rect.origin.x, rect.origin.x + rect.size.height),
+			*c = Line4f(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height, rect.origin.x, rect.origin.y + rect.size.height),
 			*d = Line4f(rect.origin.x, rect.origin.y + rect.size.height, rect.origin.x, rect.origin.y);
-	
+	//NSLog(@"Rect: %@\nLines: %@\n%@\n%@\n%@", NSStringFromRect(NSRectFromCGRect(rect)), a, b, c, d);
 	return [self intersectionPointWithLine:a] || [self intersectionPointWithLine:b] || [self intersectionPointWithLine:c] || [self intersectionPointWithLine:d];
 	
 }
@@ -119,7 +119,7 @@
 
 -(NSString*)description
 {
-    return [NSString stringWithFormat:@"<Line: %p between %@ and %@>", self, start, end];
+    return [NSString stringWithFormat:@"<Line: %@ to %@>", start, end];
 }
 
 @end
