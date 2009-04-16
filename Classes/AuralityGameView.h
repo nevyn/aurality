@@ -32,14 +32,16 @@
 {
 	NSMutableArray *beams;
 	AuPlayer *player;
+	NSMutableArray *walls;
 }
 -(id)init;
+-(void)addWall:(BNZLine*)line type:(Class)class;
 
 @property (retain) AuPlayer *player;
 
 @end
 
-@interface AuBeam : UIView
+@interface LineView : UIView
 {
 	CGPoint start, end;
 }
@@ -51,11 +53,18 @@
 @property(assign) CGPoint start;
 @property(assign) CGPoint end;
 -(BNZLine*)line;
-
-
-
 @end
 
+@interface AuBeam : LineView
+@end
+
+@interface AuWall : LineView
+-(BOOL)reflects;
+@end
+
+@interface AuMirror : AuWall
+-(BOOL)reflects;
+@end
 
 
 @interface AuralityGameView : UIScrollView {

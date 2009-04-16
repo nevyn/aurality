@@ -83,6 +83,12 @@
 	self.layer.contents = (id)[UIImage imageNamed:@"level1.png"].CGImage;
 	
 	beams = [[NSMutableArray alloc] init];
+	walls = [[NSMutableArray alloc] init];
+	
+	[self addWall:Line4f(0, 0, self.frame.size.width, 0) type:[AuWall class]];
+	[self addWall:Line4f(self.frame.size.width, 0, self.frame.size.width, self.frame.size.height) type:[AuWall class]];
+	[self addWall:Line4f(self.frame.size.width, self.frame.size.height, 0, self.frame.size.height) type:[AuWall class]];
+	[self addWall:Line4f(0, self.frame.size.height, 0, 0) type:[AuWall class]];
 	
 	player = [[AuPlayer alloc] init];
 	[self addSubview:player];
@@ -94,7 +100,16 @@
 {
 	[player release];
 	[beams release];
+	[walls release];
 	[super dealloc];
+}
+
+-(void)addWall:(BNZLine*)line type:(Class)class;
+{
+	AuWall *wall = [[class alloc] initWithLine:line];
+	[walls addObject:wall];
+	[self addSubview:wall];
+	[wall release];
 }
 
 @synthesize player;
@@ -102,7 +117,7 @@
 
 -(void)updateBeams;
 {
-	for (AuBeam *beam in [[beams copy] autorelease]) {
+	for (LineView *beam in [[beams copy] autorelease]) {
 		[beam removeFromSuperview];
 		[beams removeObject:beam];
 	}
@@ -118,7 +133,7 @@
 	
 	BNZVector *end = [start sumWithVector:[dir vectorScaledBy:300]];
 	
-	AuBeam *beam = [[AuBeam alloc] initStart:start.asCGPoint end:end.asCGPoint];
+	LineView *beam = [[LineView alloc] initStart:start.asCGPoint end:end.asCGPoint];
 	
 	[beams addObject:beam];
 	[self addSubview:beam];
@@ -131,7 +146,7 @@
 
 static double beamWidth = 5;
 
-@implementation AuBeam
+@implementation LineView
 -initStart:(CGPoint)start_ end:(CGPoint)end_;
 {
     if(![super initWithFrame:CGRectZero]) return nil;
@@ -196,8 +211,63 @@ static double beamWidth = 5;
     
 }
 
+@end
+@implementation AuBeam
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+    CGContextSetFillColor(context, (CGFloat[4]){0,0,0,0});
+	UIRectFill(rect);
+	
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, .0f, beamWidth/4.);
+    CGContextAddLineToPoint(context, self.bounds.size.width, .0f);
+    
+    CGContextSetLineWidth(context, beamWidth/2.);
+    CGContextSetStrokeColor(context, (CGFloat[4]){1,0,0,1});
+    CGContextStrokePath(context);
+    
+}
+@end
 
+@implementation AuWall
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+    CGContextSetFillColor(context, (CGFloat[4]){0,0,0,0});
+	UIRectFill(rect);
+	
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, .0f, beamWidth/4.);
+    CGContextAddLineToPoint(context, self.bounds.size.width, .0f);
+    
+    CGContextSetLineWidth(context, beamWidth/2.);
+    CGContextSetStrokeColor(context, (CGFloat[4]){0,1,0,1});
+    CGContextStrokePath(context);
+    
+}
+-(BOOL)reflects; { return NO; }
+@end
 
+@implementation AuMirror
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+    CGContextSetFillColor(context, (CGFloat[4]){0,0,0,0});
+	UIRectFill(rect);
+	
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, .0f, beamWidth/4.);
+    CGContextAddLineToPoint(context, self.bounds.size.width, .0f);
+    
+    CGContextSetLineWidth(context, beamWidth/2.);
+    CGContextSetStrokeColor(context, (CGFloat[4]){0.4,0.4,1,1});
+    CGContextStrokePath(context);
+}
+-(BOOL)reflects; { return YES; }
 @end
 
 
@@ -289,7 +359,7 @@ static double beamWidth = 5;
 {
 	UITouch *t = [[event allTouches] anyObject];
 	CGPoint p = [t locationInView:self.superview];
-	NSLog(@"%f %f", p.x, p.y);
+
 	if(p.y < 100)
 		self.movementVector = CGPointMake(0, -200);
 	else if(p.y > 350)

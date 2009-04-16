@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "BNZVector.h"
 
+#define Line4f(a, b, c, d) [BNZLine lineAt:VecXY(a, b) to:VecXY(c, d)]
+
 typedef enum {
     BNZLinesIntersect = 0,
     BNZLinesDoNotIntersect,
