@@ -86,7 +86,7 @@
 			<key>x1</key>
 			<integer>4</integer>
 			<key>y1</key>
-			<integer>100</integer>
+			<integer>0</integer>
 			<key>x2</key>
 			<integer>4</integer>
 			<key>y2</key>
@@ -104,6 +104,32 @@
 			<integer>0</integer>
 			<key>y2</key>
 			<integer>204</integer>
+		</dict>
+		
+		<dict>
+			<key>class</key>
+			<string>AuMirror</string>
+			<key>x1</key>
+			<integer>0</integer>
+			<key>y1</key>
+			<integer>4</integer>
+			<key>x2</key>
+			<integer>198</integer>
+			<key>y2</key>
+			<integer>4</integer>
+		</dict>
+		
+		<dict>
+			<key>class</key>
+			<string>AuMirror</string>
+			<key>x1</key>
+			<integer>0</integer>
+			<key>y1</key>
+			<integer>196</integer>
+			<key>x2</key>
+			<integer>200</integer>
+			<key>y2</key>
+			<integer>196</integer>
 		</dict>
 		
 		<dict>
