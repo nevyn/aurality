@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "BNZLine.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface AuCannon : UIView
 {
@@ -99,7 +100,7 @@
 @property BOOL open;
 @end
 
-@interface AuralityGameView : UIScrollView {
+@interface AuralityGameView : UIScrollView <AVAudioPlayerDelegate> {
 	BOOL firing;
 	double angle;
 	AuLevel *level;

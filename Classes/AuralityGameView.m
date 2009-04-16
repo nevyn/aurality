@@ -9,7 +9,6 @@
 #import "AuralityGameView.h"
 
 
-
 @implementation AuCannon
 -(id)init;
 {
@@ -589,6 +588,13 @@ static double beamWidth = 5;
 
 -(void)clearLevel;
 {
+	if(levelNo == 0) {
+		NSURL *url = [[[NSURL alloc] initFileURLWithPath:[[NSBundle mainBundle] pathForResource:@"intro voice" ofType:@"m4a"]] autorelease];
+		AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+		NSLog(@"%@ player %@", url, player);
+		player.delegate = self;
+		[player play];
+	}
 	NSString *levelName = [NSString stringWithFormat:@"level%d", ++levelNo];
 	if([[NSBundle mainBundle] pathForResource:levelName ofType:@"plist"]) {
 		[level loadLevel:levelName];
@@ -608,6 +614,10 @@ static double beamWidth = 5;
 	
 	plaque.layer.opacity = 0.0;
 	[UIView commitAnimations];
+}
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag;
+{
+	[player release];
 }
 
 -(double)angle; { return level.player.cannon.angle; }

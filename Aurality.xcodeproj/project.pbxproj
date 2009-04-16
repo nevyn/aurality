@@ -23,6 +23,8 @@
 		05CCEE460F96CF50004313C5 /* switch.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEE440F96CF50004313C5 /* switch.png */; };
 		05CCEE470F96CF50004313C5 /* switch-activated.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEE450F96CF50004313C5 /* switch-activated.png */; };
 		05CCEEED0F96D90F004313C5 /* level2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEEEC0F96D90F004313C5 /* level2.plist */; };
+		05CDB5E50F96E2260072052F /* intro voice.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 05CDB5E40F96E2260072052F /* intro voice.m4a */; };
+		05CDB5E80F96E2360072052F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CDB5E70F96E2360072052F /* AVFoundation.framework */; };
 		05D6201E0F967590005ED13D /* CInvocationGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6201C0F967590005ED13D /* CInvocationGrabber.m */; };
 		05D6206E0F967A52005ED13D /* AuralityGameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6206D0F967A52005ED13D /* AuralityGameView.m */; };
 		05D620910F967E4A005ED13D /* player.png in Resources */ = {isa = PBXBuildFile; fileRef = 05D620900F967E4A005ED13D /* player.png */; };
@@ -61,6 +63,8 @@
 		05CCEE440F96CF50004313C5 /* switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = switch.png; path = resources/switch.png; sourceTree = "<group>"; };
 		05CCEE450F96CF50004313C5 /* switch-activated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "switch-activated.png"; path = "resources/switch-activated.png"; sourceTree = "<group>"; };
 		05CCEEEC0F96D90F004313C5 /* level2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = level2.plist; sourceTree = "<group>"; };
+		05CDB5E40F96E2260072052F /* intro voice.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "intro voice.m4a"; path = "resources/intro voice.m4a"; sourceTree = "<group>"; };
+		05CDB5E70F96E2360072052F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		05D6201C0F967590005ED13D /* CInvocationGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CInvocationGrabber.m; sourceTree = "<group>"; };
 		05D6201D0F967590005ED13D /* CInvocationGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CInvocationGrabber.h; sourceTree = "<group>"; };
 		05D6206C0F967A52005ED13D /* AuralityGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuralityGameView.h; sourceTree = "<group>"; };
@@ -90,6 +94,7 @@
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				05C3FCD20F96216900807D7C /* AudioToolbox.framework in Frameworks */,
 				05C3FD730F96459F00807D7C /* libfftw3.a in Frameworks */,
+				05CDB5E80F96E2360072052F /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +167,7 @@
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				05CCEC360F9690CF004313C5 /* level1.png */,
 				05CCEE440F96CF50004313C5 /* switch.png */,
+				05CDB5E40F96E2260072052F /* intro voice.m4a */,
 				05CCEE450F96CF50004313C5 /* switch-activated.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				05C3FCC00F9620B700807D7C /* AuralityGame.xib */,
@@ -174,6 +180,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05CDB5E70F96E2360072052F /* AVFoundation.framework */,
 				05C3FD760F9645F000807D7C /* fftw3.h */,
 				05C3FD720F96459F00807D7C /* libfftw3.a */,
 				05C3FCCF0F96216900807D7C /* AudioToolbox.framework */,
@@ -237,6 +244,7 @@
 				05CCEE460F96CF50004313C5 /* switch.png in Resources */,
 				05CCEE470F96CF50004313C5 /* switch-activated.png in Resources */,
 				05CCEEED0F96D90F004313C5 /* level2.plist in Resources */,
+				05CDB5E50F96E2260072052F /* intro voice.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +309,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Joachim Bengtsson (Macdata)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -312,6 +321,7 @@
 					"\"$(SRCROOT)/Vendor\"",
 				);
 				PRODUCT_NAME = Aurality;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F003BE9B-34B1-4537-8C8B-8A66B20BAB8F";
 			};
 			name = Debug;
 		};
