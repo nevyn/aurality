@@ -62,6 +62,12 @@
 	
 	return self;
 }
+-(CGRect)boundingFrame;
+{
+	CGRect r = self.frame;
+	r.size = CGSizeMake(50, 50);
+	return r;
+}
 - (void)dealloc {
 	self.cannon = nil;
     [super dealloc];
@@ -82,6 +88,7 @@
 	
 	beams = [[NSMutableArray alloc] init];
 	walls = [[NSMutableArray alloc] init];
+	switches = [[NSMutableArray alloc] init];
 	
 	player = [[AuPlayer alloc] init];
 	[self addSubview:player];
@@ -98,15 +105,17 @@
 	[player release];
 	[beams release];
 	[walls release];
+	[switches release];
 	[super dealloc];
 }
 
--(void)addWall:(BNZLine*)line type:(Class)class;
+-(AuWall*)addWall:(BNZLine*)line type:(Class)class;
 {
 	AuWall *wall = [[class alloc] initWithLine:line];
 	[walls addObject:wall];
 	[self addSubview:wall];
 	[wall release];
+	return wall;
 }
 
 -(void)loadLevel:(NSString*)name;
@@ -114,6 +123,10 @@
 	for (AuWall *wall in [[walls copy] autorelease]) {
 		[wall removeFromSuperview];
 		[walls removeObject:wall];
+	}
+	for (AuSwitch *sw in self.switches) {
+		[sw removeFromSuperview];
+		[switches removeObject:sw];
 	}
 	
 	NSDictionary *rep = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"plist"]];
@@ -132,13 +145,26 @@
 	
 	for (NSDictionary *wd in [rep objectForKey:@"walls"]) {
 		BNZLine *l = Line4f([[wd objectForKey:@"x1"] floatValue], [[wd objectForKey:@"y1"] floatValue], [[wd objectForKey:@"x2"] floatValue], [[wd objectForKey:@"y2"] floatValue]);
-		[self addWall:l type:NSClassFromString([wd objectForKey:@"class"])];
+		AuWall *wall = [self addWall:l type:NSClassFromString([wd objectForKey:@"class"])];
+		if([[wd objectForKey:@"class"] isEqual:@"AuExit"])
+			exit = (id)wall;
+	}
+	
+	for (NSDictionary *sd in [rep objectForKey:@"switches"]) {
+		CGPoint p = CGPointMake([[sd objectForKey:@"x"] floatValue], [[sd objectForKey:@"y"] floatValue]);
+		AuSwitch *sw = [[AuSwitch alloc] init];
+		sw.layer.position = p;
+		sw.delay = [[sd objectForKey:@"delay"] floatValue];
+		[switches addObject:sw];
+		[self addSubview:sw];
+		[sw release];
 	}
 	
 	
 }
 
 @synthesize player;
+@synthesize exit;
 
 -(void)beamFrom:(BNZVector*)start direction:(BNZVector*)dir ignoringWall:(AuWall*)ignore;
 {
@@ -147,11 +173,13 @@
 	BNZLine *beamLine = [BNZLine lineAt:start to:end];
 	
 	for (AuWall *wall in walls) {
+		// Stop/reflection
 		if(wall == ignore || wall.transparent) continue;
 		
 		BNZVector *intersectionPoint = [beamLine intersectionPointWithLine:wall.line];
 		if(!intersectionPoint) continue;
 		end = intersectionPoint;
+		beamLine = [BNZLine lineAt:start to:end]; // because end changed
 		
 		if(wall.reflects) {
 			BNZVector *wallNormalL = [wall.line.vector leftHandNormal];
@@ -167,7 +195,14 @@
 		} 
 	}
 	
-	LineView *beam = [[LineView alloc] initStart:start.asCGPoint end:end.asCGPoint];
+	
+	LineView *beam = [[LineView alloc] initWithLine:beamLine];
+	
+	for ( AuSwitch *sw in switches ) {
+		if([beamLine intersectsRect:sw.frame]) {
+			sw.activated = YES;
+		}
+	}
 	
 	[beams addObject:beam];
 	[self addSubview:beam];
@@ -197,6 +232,11 @@
 {
 	return [[walls copy] autorelease];
 }
+-(NSArray*)switches;
+{
+	return [[switches copy] autorelease];
+}
+
 
 @end
 
@@ -266,6 +306,11 @@ static double beamWidth = 5;
     CGContextSetStrokeColor(context, (CGFloat[4]){1,0,0,1});
     CGContextStrokePath(context);
     
+}
+
+-(NSString*)description;
+{
+	return self.line.description;
 }
 
 @end
@@ -349,6 +394,114 @@ static double beamWidth = 5;
 -(BOOL)transparent; { return YES; }
 @end
 
+@implementation AuExit
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+    CGContextSetFillColor(context, (CGFloat[4]){0,0,0,0});
+	UIRectFill(rect);
+	
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, .0f, .0f);
+    CGContextAddLineToPoint(context, self.bounds.size.width, .0f);
+    
+    CGContextSetLineWidth(context, beamWidth*3);
+	if( ! open)
+		CGContextSetStrokeColor(context, (CGFloat[4]){1,0,0,1});
+	else
+		CGContextSetStrokeColor(context, (CGFloat[4]){0,1,0,1});
+	
+    CGContextStrokePath(context);
+}
+@synthesize open;
+-(void)setOpen:(BOOL)newOpen;
+{
+	open = newOpen;
+	[self setNeedsDisplay];
+}
+@end
+
+@interface AuSwitch ()
+@property (retain, nonatomic) NSTimer *deactivationTimer;
+@property (retain, nonatomic) UILabel *countdownLabel;
+@end
+
+@implementation AuSwitch
+-(id)init;
+{
+	if( ! [super initWithFrame:CGRectMake(0, 0, 32, 32)] ) return nil;
+	
+	activated = 2; // hack: make sure setActivated triggers change
+	self.activated = NO;
+
+	return self;
+}
+-(void)dealloc;
+{
+	self.deactivationTimer = nil;
+	self.countdownLabel = nil;
+	[super dealloc];
+}
+@synthesize activated;
+-(void)setActivated:(BOOL)newActivated;
+{
+	activated = newActivated;
+	
+	self.deactivationTimer = nil;
+	
+	activatedAt = [NSDate timeIntervalSinceReferenceDate];
+	
+	if(activated) {
+		self.layer.contents = (id)[UIImage imageNamed:@"switch-activated.png"].CGImage;
+		self.deactivationTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(timerCountdown) userInfo:nil repeats:NO];
+	} else {
+		self.layer.contents = (id)[UIImage imageNamed:@"switch.png"].CGImage;
+	}
+}
+
+-(void)timerCountdown; {
+	if( ! self.countdownLabel ) {
+		self.countdownLabel = [[[UILabel alloc] initWithFrame:CGRectMake(5, 0, 32, 32)] autorelease];
+		self.countdownLabel.opaque = NO;
+		self.countdownLabel.backgroundColor = [UIColor clearColor];
+	}
+	
+	NSTimeInterval secondsElapsed = [NSDate timeIntervalSinceReferenceDate] - activatedAt;
+	NSTimeInterval secondsRemaining = delay - secondsElapsed;
+	
+	self.countdownLabel.text = [NSString stringWithFormat:@"%d", (int)secondsRemaining];
+	
+	if(secondsRemaining < 1) {
+		self.activated = NO;
+		self.countdownLabel = nil;
+	} else {
+		self.deactivationTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerCountdown) userInfo:nil repeats:NO];
+	}
+}
+
+@synthesize deactivationTimer;
+-(void)setDeactivationTimer:(NSTimer*)t;
+{
+	if(t == deactivationTimer) return;
+	[t retain];
+	[deactivationTimer invalidate];
+	[deactivationTimer release];
+	deactivationTimer = t;
+}
+@synthesize delay;
+@synthesize countdownLabel;
+-(void)setCountdownLabel:(UILabel*)label;
+{
+	if(!label)
+		[countdownLabel removeFromSuperview];
+	[label retain];
+	[countdownLabel release];
+	countdownLabel = label;
+	if(label)
+		[self addSubview:label];
+}
+@end
 
 
 
@@ -397,12 +550,18 @@ static double beamWidth = 5;
 	BOOL collidingWithWall = NO;
 	
 	for (AuWall *wall in level.walls) {
-		collidingWithWall = [wall.line intersectsRect:level.player.frame];
+		collidingWithWall = [wall.line intersectsRect:level.player.boundingFrame];
 		if(collidingWithWall) {
 			level.player.layer.position = oldPos;
 			break;
 		}
 	}
+	
+	BOOL allActivated = YES;
+	for (AuSwitch *sw in level.switches) {
+		allActivated &= sw.activated;
+	}
+	level.exit.open = allActivated;
 		
 	self.contentOffset = CGPointMake(level.player.layer.position.x-self.frame.size.width/2, level.player.layer.position.y-self.frame.size.height/2);
 	
