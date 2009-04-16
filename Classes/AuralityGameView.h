@@ -38,7 +38,7 @@
 	NSMutableArray *switches;
 	AuExit *exit;
 }
--(id)initWithName:(NSString*)levelName;
+-(id)init;
 -(AuWall*)addWall:(BNZLine*)line type:(Class)class;
 -(void)loadLevel:(NSString*)name;
 
@@ -105,11 +105,15 @@
 	AuLevel *level;
 	CGPoint movementVector;
 	
+	UILabel *plaque;
+	
+	int levelNo;
+	
 	NSTimer *updateTimer;
 	NSTimeInterval lastUpdate;
 }
 @property (nonatomic) double angle;
 @property (nonatomic) BOOL firing;
 @property (nonatomic) CGPoint movementVector;
-
+-(void)clearLevel;
 @end

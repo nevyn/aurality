@@ -22,6 +22,7 @@
 		05CCED510F96B638004313C5 /* level1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 05CCED500F96B638004313C5 /* level1.plist */; };
 		05CCEE460F96CF50004313C5 /* switch.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEE440F96CF50004313C5 /* switch.png */; };
 		05CCEE470F96CF50004313C5 /* switch-activated.png in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEE450F96CF50004313C5 /* switch-activated.png */; };
+		05CCEEED0F96D90F004313C5 /* level2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 05CCEEEC0F96D90F004313C5 /* level2.plist */; };
 		05D6201E0F967590005ED13D /* CInvocationGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6201C0F967590005ED13D /* CInvocationGrabber.m */; };
 		05D6206E0F967A52005ED13D /* AuralityGameView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05D6206D0F967A52005ED13D /* AuralityGameView.m */; };
 		05D620910F967E4A005ED13D /* player.png in Resources */ = {isa = PBXBuildFile; fileRef = 05D620900F967E4A005ED13D /* player.png */; };
@@ -59,6 +60,7 @@
 		05CCED500F96B638004313C5 /* level1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = level1.plist; sourceTree = "<group>"; };
 		05CCEE440F96CF50004313C5 /* switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = switch.png; path = resources/switch.png; sourceTree = "<group>"; };
 		05CCEE450F96CF50004313C5 /* switch-activated.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "switch-activated.png"; path = "resources/switch-activated.png"; sourceTree = "<group>"; };
+		05CCEEEC0F96D90F004313C5 /* level2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = level2.plist; sourceTree = "<group>"; };
 		05D6201C0F967590005ED13D /* CInvocationGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CInvocationGrabber.m; sourceTree = "<group>"; };
 		05D6201D0F967590005ED13D /* CInvocationGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CInvocationGrabber.h; sourceTree = "<group>"; };
 		05D6206C0F967A52005ED13D /* AuralityGameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AuralityGameView.h; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				05C3FCC00F9620B700807D7C /* AuralityGame.xib */,
 				05CCED500F96B638004313C5 /* level1.plist */,
+				05CCEEEC0F96D90F004313C5 /* level2.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 				05CCED510F96B638004313C5 /* level1.plist in Resources */,
 				05CCEE460F96CF50004313C5 /* switch.png in Resources */,
 				05CCEE470F96CF50004313C5 /* switch-activated.png in Resources */,
+				05CCEEED0F96D90F004313C5 /* level2.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

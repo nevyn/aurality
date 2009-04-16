@@ -82,7 +82,7 @@
 
 @implementation AuLevel
 
--(id)initWithName:(NSString*)levelName;
+-(id)init;
 {
 	if( ! [super initWithFrame:CGRectMake(0, 0, 480, 640)] ) return nil;
 	
@@ -93,10 +93,7 @@
 	player = [[AuPlayer alloc] init];
 	[self addSubview:player];
 	player.layer.position = CGPointMake(128, 128);
-	
-	
-	[self loadLevel:levelName];
-	
+		
 	
 	return self;
 }
@@ -417,6 +414,8 @@ static double beamWidth = 5;
 @synthesize open;
 -(void)setOpen:(BOOL)newOpen;
 {
+	if(open == newOpen) return;
+	
 	open = newOpen;
 	[self setNeedsDisplay];
 }
@@ -515,12 +514,22 @@ static double beamWidth = 5;
 - (id)initWithFrame:(CGRect)frame {
     if ( ! [super initWithFrame:frame] ) return nil;
 	
-	level = [[AuLevel alloc] initWithName:@"level1"];
-	[self addSubview:level];
+	plaque = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, frame.size.width, 200)];
+	plaque.font = [UIFont systemFontOfSize:42];
+	plaque.opaque = YES;
+	plaque.backgroundColor = [UIColor clearColor];
+	[self addSubview:plaque];
+	
+	
+	levelNo	 = 0;
+	level = [[AuLevel alloc] init];
+	[self clearLevel];
+	[self insertSubview:level belowSubview:plaque];
 	self.contentSize = level.frame.size;
 	
 	lastUpdate = [NSDate timeIntervalSinceReferenceDate];
 	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:1./40. target:self selector:@selector(update) userInfo:nil repeats:YES];
+	
 		
     return self;
 }
@@ -529,6 +538,7 @@ static double beamWidth = 5;
 - (void)dealloc {
 	self.updateTimer = nil;
 	[level release];
+	[plaque release];
     [super dealloc];
 }
 
@@ -552,6 +562,13 @@ static double beamWidth = 5;
 	for (AuWall *wall in level.walls) {
 		collidingWithWall = [wall.line intersectsRect:level.player.boundingFrame];
 		if(collidingWithWall) {
+			if([wall isKindOfClass:[AuExit class]]) {
+				if(((AuExit*)wall).open) {
+					[self clearLevel];
+					return;
+				}
+			}
+			
 			level.player.layer.position = oldPos;
 			break;
 		}
@@ -568,6 +585,29 @@ static double beamWidth = 5;
 	lastUpdate = now;
 	
 	[level updateBeams];
+}
+
+-(void)clearLevel;
+{
+	NSString *levelName = [NSString stringWithFormat:@"level%d", ++levelNo];
+	if([[NSBundle mainBundle] pathForResource:levelName ofType:@"plist"]) {
+		[level loadLevel:levelName];
+		
+		plaque.text = levelName;
+		
+	} else {
+		plaque.text = @"YOU WIN!";
+		levelNo = 1;
+		levelName = [NSString stringWithFormat:@"level%d", ++levelNo];
+		[level loadLevel:levelName];
+	}
+	plaque.layer.opacity = 1.0;
+
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:4.0];
+	
+	plaque.layer.opacity = 0.0;
+	[UIView commitAnimations];
 }
 
 -(double)angle; { return level.player.cannon.angle; }
