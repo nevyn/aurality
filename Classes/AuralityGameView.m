@@ -76,19 +76,14 @@
 
 @implementation AuLevel
 
--(id)init;
+-(id)initWithName:(NSString*)levelName;
 {
 	if( ! [super initWithFrame:CGRectMake(0, 0, 480, 640)] ) return nil;
-	
-	self.layer.contents = (id)[UIImage imageNamed:@"level1.png"].CGImage;
 	
 	beams = [[NSMutableArray alloc] init];
 	walls = [[NSMutableArray alloc] init];
 	
-	[self addWall:Line4f(0, 0, self.frame.size.width, 0) type:[AuWall class]];
-	[self addWall:Line4f(self.frame.size.width, 0, self.frame.size.width, self.frame.size.height) type:[AuWall class]];
-	[self addWall:Line4f(self.frame.size.width, self.frame.size.height, 0, self.frame.size.height) type:[AuWall class]];
-	[self addWall:Line4f(0, self.frame.size.height, 0, 0) type:[AuWall class]];
+	[self loadLevel:levelName];
 	
 	player = [[AuPlayer alloc] init];
 	[self addSubview:player];
@@ -112,12 +107,74 @@
 	[wall release];
 }
 
+-(void)loadLevel:(NSString*)name;
+{
+	for (AuWall *wall in [[walls copy] autorelease]) {
+		[wall removeFromSuperview];
+		[walls removeObject:wall];
+	}
+	
+	NSDictionary *rep = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"plist"]];
+	
+	self.layer.contents = (id)[UIImage imageNamed:[rep objectForKey:@"background"]].CGImage;
+	
+	CGRect frame = CGRectMake(0, 0, [[rep objectForKey:@"width"] floatValue], [[rep objectForKey:@"height"] floatValue]);
+	self.frame = frame;
+	
+	
+	[self addWall:Line4f(0, 0, self.frame.size.width, 0) type:[AuWall class]];
+	[self addWall:Line4f(self.frame.size.width, 0, self.frame.size.width, self.frame.size.height) type:[AuWall class]];
+	[self addWall:Line4f(self.frame.size.width, self.frame.size.height, 0, self.frame.size.height) type:[AuWall class]];
+	[self addWall:Line4f(0, self.frame.size.height, 0, 0) type:[AuWall class]];
+	
+	for (NSDictionary *wd in [rep objectForKey:@"walls"]) {
+		BNZLine *l = Line4f([[wd objectForKey:@"x1"] floatValue], [[wd objectForKey:@"y1"] floatValue], [[wd objectForKey:@"x2"] floatValue], [[wd objectForKey:@"y2"] floatValue]);
+		[self addWall:l type:NSClassFromString([wd objectForKey:@"class"])];
+	}
+	
+	
+}
+
 @synthesize player;
 
+-(void)beamFrom:(BNZVector*)start direction:(BNZVector*)dir ignoringWall:(AuWall*)ignore;
+{
+	BNZVector *end = [start sumWithVector:[dir vectorScaledBy:400]];
+	
+	BNZLine *beamLine = [BNZLine lineAt:start to:end];
+	
+	for (AuWall *wall in walls) {
+		if(wall == ignore) continue;
+		
+		BNZVector *intersectionPoint = [beamLine intersectionPointWithLine:wall.line];
+		if(!intersectionPoint) continue;
+		end = intersectionPoint;
+		
+		if(wall.reflects) {
+			BNZVector *wallNormalL = [wall.line.vector leftHandNormal];
+			BNZVector *wallNormalR = [wall.line.vector rightHandNormal];
+			float lenL = [[dir sumWithVector:wallNormalL] length];
+			float lenR = [[dir sumWithVector:wallNormalR] length];
+			// choose the one pointing toward the incoming beam
+			BNZVector *wallNormal = (lenL < lenR) ? wallNormalL : wallNormalR;
+			
+			BNZVector *newDir = [dir sumWithVector:[wallNormal productWithScalar:2.0]];
+			
+			[self beamFrom:end direction:newDir ignoringWall:wall];
+		} 
+	}
+	
+	LineView *beam = [[LineView alloc] initStart:start.asCGPoint end:end.asCGPoint];
+	
+	[beams addObject:beam];
+	[self addSubview:beam];
+	[beam release];
+	
+}
 
 -(void)updateBeams;
 {
-	for (LineView *beam in [[beams copy] autorelease]) {
+	for (id beam in [[beams copy] autorelease]) {
 		[beam removeFromSuperview];
 		[beams removeObject:beam];
 	}
@@ -128,17 +185,9 @@
 	[dir rotateByDegrees:player.cannon.angle];
 	
 	BNZVector *pl = VecCG(player.layer.position);
-	
 	BNZVector *start = [pl sumWithVector:[dir vectorScaledBy:32]];
 	
-	BNZVector *end = [start sumWithVector:[dir vectorScaledBy:300]];
-	
-	LineView *beam = [[LineView alloc] initStart:start.asCGPoint end:end.asCGPoint];
-	
-	[beams addObject:beam];
-	[self addSubview:beam];
-	[beam release];
-	
+	[self beamFrom:start direction:dir ignoringWall:nil];	
 }
 
 @end
@@ -283,7 +332,7 @@ static double beamWidth = 5;
 - (id)initWithFrame:(CGRect)frame {
     if ( ! [super initWithFrame:frame] ) return nil;
 	
-	level = [[AuLevel alloc] init];
+	level = [[AuLevel alloc] initWithName:@"level1"];
 	[self addSubview:level];
 	self.contentSize = level.frame.size;
 	

@@ -13,7 +13,7 @@
 
 #define kAuralityFiringAmplitude 200000
 #define kAuralityHighCutoffHz 2500
-#define kAuralityMaxAngleFreq 1300
+#define kAuralityMaxAngleFreq 1700
 #define kAuralityLowCutoffHz 800
 
 @interface AuralityGameController : UIViewController <AudioRecorderDelegate, UIAccelerometerDelegate> {

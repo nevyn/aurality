@@ -34,8 +34,9 @@
 	AuPlayer *player;
 	NSMutableArray *walls;
 }
--(id)init;
+-(id)initWithName:(NSString*)levelName;
 -(void)addWall:(BNZLine*)line type:(Class)class;
+-(void)loadLevel:(NSString*)name;
 
 @property (retain) AuPlayer *player;
 
