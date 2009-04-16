@@ -39,7 +39,7 @@
 -(void)loadLevel:(NSString*)name;
 
 @property (retain) AuPlayer *player;
-
+@property (readonly) NSArray *walls;
 @end
 
 @interface LineView : UIView
@@ -61,12 +61,18 @@
 
 @interface AuWall : LineView
 -(BOOL)reflects;
+-(BOOL)transparent;
 @end
 
 @interface AuMirror : AuWall
 -(BOOL)reflects;
+-(BOOL)transparent;
 @end
 
+@interface AuWindow : AuWall
+-(BOOL)reflects;
+-(BOOL)transparent;
+@end
 
 @interface AuralityGameView : UIScrollView {
 	BOOL firing;

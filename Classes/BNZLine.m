@@ -87,6 +87,20 @@
     return distance;
 }
 
+
+
+-(BOOL)intersectsRect:(CGRect)rect;
+{
+	BNZLine *a = Line4f(rect.origin.x, rect.origin.y, rect.origin.x+rect.size.width, rect.origin.y),
+			*b = Line4f(rect.origin.x + rect.size.width, rect.origin.y, rect.origin.x+rect.size.width, rect.origin.y+rect.size.height),
+			*c = Line4f(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height, rect.origin.x, rect.origin.x + rect.size.height),
+			*d = Line4f(rect.origin.x, rect.origin.y + rect.size.height, rect.origin.x, rect.origin.y);
+	
+	return [self intersectionPointWithLine:a] || [self intersectionPointWithLine:b] || [self intersectionPointWithLine:c] || [self intersectionPointWithLine:d];
+	
+}
+
+
 -(BNZVector*)start; { return start; }
 -(BNZVector*)end; { return end; }
 -(void)setStart:(BNZVector*)start_;
@@ -101,6 +115,7 @@
     [end release];
     end = end_;
 }
+
 
 -(NSString*)description
 {

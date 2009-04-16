@@ -83,11 +83,13 @@
 	beams = [[NSMutableArray alloc] init];
 	walls = [[NSMutableArray alloc] init];
 	
-	[self loadLevel:levelName];
-	
 	player = [[AuPlayer alloc] init];
 	[self addSubview:player];
 	player.layer.position = CGPointMake(128, 128);
+	
+	
+	[self loadLevel:levelName];
+	
 	
 	return self;
 }
@@ -121,6 +123,7 @@
 	CGRect frame = CGRectMake(0, 0, [[rep objectForKey:@"width"] floatValue], [[rep objectForKey:@"height"] floatValue]);
 	self.frame = frame;
 	
+	player.layer.position = CGPointMake([[rep objectForKey:@"startx"] floatValue], [[rep objectForKey:@"starty"] floatValue]);
 	
 	[self addWall:Line4f(0, 0, self.frame.size.width, 0) type:[AuWall class]];
 	[self addWall:Line4f(self.frame.size.width, 0, self.frame.size.width, self.frame.size.height) type:[AuWall class]];
@@ -144,7 +147,7 @@
 	BNZLine *beamLine = [BNZLine lineAt:start to:end];
 	
 	for (AuWall *wall in walls) {
-		if(wall == ignore) continue;
+		if(wall == ignore || wall.transparent) continue;
 		
 		BNZVector *intersectionPoint = [beamLine intersectionPointWithLine:wall.line];
 		if(!intersectionPoint) continue;
@@ -188,6 +191,11 @@
 	BNZVector *start = [pl sumWithVector:[dir vectorScaledBy:32]];
 	
 	[self beamFrom:start direction:dir ignoringWall:nil];	
+}
+
+-(NSArray*)walls;
+{
+	return [[walls copy] autorelease];
 }
 
 @end
@@ -298,6 +306,7 @@ static double beamWidth = 5;
     
 }
 -(BOOL)reflects; { return NO; }
+-(BOOL)transparent; { return NO; }
 @end
 
 @implementation AuMirror
@@ -317,6 +326,27 @@ static double beamWidth = 5;
     CGContextStrokePath(context);
 }
 -(BOOL)reflects; { return YES; }
+-(BOOL)transparent; { return NO; }
+@end
+
+@implementation AuWindow
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+    CGContextSetFillColor(context, (CGFloat[4]){0,0,0,0});
+	UIRectFill(rect);
+	
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, .0f, .0f);
+    CGContextAddLineToPoint(context, self.bounds.size.width, .0f);
+    
+    CGContextSetLineWidth(context, beamWidth*3);
+    CGContextSetStrokeColor(context, (CGFloat[4]){0.6,0.6,1,1});
+    CGContextStrokePath(context);
+}
+-(BOOL)reflects; { return NO; }
+-(BOOL)transparent; { return YES; }
 @end
 
 
@@ -354,13 +384,26 @@ static double beamWidth = 5;
 	NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
 	NSTimeInterval d = now - lastUpdate;
 	
-	CGPoint newPos = CGPointMake(level.player.layer.position.x + movementVector.x*d, level.player.layer.position.y + movementVector.y*d);
+	CGPoint oldPos = level.player.layer.position;
 	
-	BOOL isInLevel = newPos.x > 16 && newPos.y > 16 && newPos.x < level.frame.size.width-16 && newPos.y < level.frame.size.height-16;
+	BNZVector *pl = VecCG(level.player.layer.position);
+	BNZVector *move = VecCG(movementVector);
+	[move multiplyWithScalar:d];
 	
-	if(isInLevel)
-		level.player.layer.position = newPos;
+	BNZVector *newPos = [pl addVector:move];
 	
+	level.player.layer.position = newPos.asCGPoint;
+	
+	BOOL collidingWithWall = NO;
+	
+	for (AuWall *wall in level.walls) {
+		collidingWithWall = [wall.line intersectsRect:level.player.frame];
+		if(collidingWithWall) {
+			level.player.layer.position = oldPos;
+			break;
+		}
+	}
+		
 	self.contentOffset = CGPointMake(level.player.layer.position.x-self.frame.size.width/2, level.player.layer.position.y-self.frame.size.height/2);
 	
 	lastUpdate = now;
