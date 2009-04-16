@@ -608,9 +608,9 @@ static double beamWidth = 5;
 		NSURL *url = [[[NSURL alloc] initFileURLWithPath:[[NSBundle mainBundle] pathForResource:@"intro voice" ofType:@"m4a"]] autorelease];
 		AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
 		player.volume = 1.0;
-		NSLog(@"%@ player %@", url, player);
+
 		player.delegate = self;
-		[player play];
+		//[player play];
 	}
 	NSString *levelName = [NSString stringWithFormat:@"level%d", ++levelNo];
 	if([[NSBundle mainBundle] pathForResource:levelName ofType:@"plist"]) {
